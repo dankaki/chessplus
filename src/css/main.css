@@ -1,0 +1,16 @@
+:root {
+    --chess-light: #dbe2e3ff;
+    --chess-dark: #122122ff;
+    --main-font: 40px "Arial Rounded MT Bold", Futura, sans-serif;
+}
+
+
+body{
+    background-color: #eeeaeaff;
+}
+
+h1{
+    text-align: center;
+    color: var(--chess-dark);
+    font: var(--main-font)
+}

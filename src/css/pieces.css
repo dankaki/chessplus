@@ -1,0 +1,38 @@
+.piece{
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-size: contain;
+    border: none;
+    pointer-events: none
+}
+
+.pawn_w{
+    background: url("../png/pawn_w.png") center no-repeat;
+    background-size: contain;
+}
+
+.bishop_w{
+    background: url("../png/bishop_w.png") center no-repeat;
+    background-size: contain;
+}
+
+.king_w{
+    background: url("../png/king_w.png") center no-repeat;
+    background-size: contain;
+}
+
+.knight_w{
+    background: url("../png/knight_w.png") center no-repeat;
+    background-size: contain;
+}
+
+.queen_w{
+    background: url("../png/queen_w.png") center no-repeat;
+    background-size: contain;
+}
+
+.rook_w{
+    background: url("../png/rook_w.png") center no-repeat;
+    background-size: contain;
+}

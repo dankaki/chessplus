@@ -1,0 +1,49 @@
+.square{
+    float: left;
+    width: 40px;
+    height: 40px;
+    background-color: var(--chess-light);
+    border: none;
+}
+
+.blacksquare{
+    background-color: var(--chess-dark);
+    color: white;
+}
+
+.Board{
+    margin: 40px;
+    position: relative;
+}
+
+.board-row{
+    overflow: hidden;
+}
+
+.alpha-row{
+    overflow: hidden;
+}
+
+.alpha-square{
+    float: left;
+    color: var(--chess-dark);
+    font: var(--main-font);
+    width: 40px;
+    height: 40px;
+    padding-bottom: 5px;
+    text-align: center;
+}
+
+.num-square{
+    float: left;
+    color: var(--chess-dark);
+    font: var(--main-font);
+    width: 40px;
+    height: 40px;
+    text-align: center;
+}
+
+.alpha-active{
+    color: #c83737ff;
+    background-color: #ffffff99;
+}
