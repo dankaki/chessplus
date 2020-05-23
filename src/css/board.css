@@ -11,6 +11,10 @@
     color: white;
 }
 
+.active-square{
+    background-color: green;
+}
+
 .Board{
     margin: 40px;
     position: relative;

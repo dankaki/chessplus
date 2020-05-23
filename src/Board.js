@@ -7,11 +7,47 @@ class Board extends React.Component {
 
     constructor(props){
         super(props)
-        this.state = {squares: Array(64).fill(null)}
+        this.state = {squares: Array(64).fill(null), chosen: null}
+    }
+
+    movePiece(piece_id, i){
+        let squares = this.state.squares.slice()
+        squares[squares.indexOf(piece_id)] = null
+        squares[i] = piece_id
+        this.setState({squares: squares})
+        const piece = document.getElementById(piece_id)
+        const row = Math.floor(i / 8)
+        const col = i % 8
+        const y = (row + 1) * 40;
+        const x = (col + 1) * 40;
+        piece.style.top = String(y) + "px"
+        piece.style.left = String(x) + "px"
+    }
+
+    handleClick(i){
+        if (this.state.chosen) {
+            const prev_i = this.state.squares.indexOf(this.state.chosen)
+            const square = document.getElementById("square_"+prev_i)
+            square.className = square.className.replace(" active-square","")
+            if (this.state.squares[i]) {
+                alert("You cannot place pieces on top of other pieces")
+            }
+            else{
+                this.movePiece(this.state.chosen, i)
+            }
+            this.setState({chosen : null})
+        }
+        else {
+            if(this.state.squares[i]){
+                const square = document.getElementById("square_"+i)
+                square.className = square.className + " active-square"
+                this.setState({chosen : this.state.squares[i]})
+            }
+        }
     }
 
     renderSquare(i){
-        return <Square value = {i}/>;
+        return <Square value = {i} onClick = {() => this.handleClick(i)}/>;
     }
 
     renderRow(n){
@@ -53,36 +89,50 @@ class Board extends React.Component {
         const knight_offsets = [80, 280]
         const rook_offsets = [40, 320]
 
+        let squares = this.state.squares.slice();
         const pawn_w_id = [0,1,2,3,4,5,6,7].map((i) => "pawn_w_"+i)
         for (let i = 0; i < 8; i++){
             let piece = document.getElementById(pawn_w_id[i])
             piece.style.top = "80px"
             piece.style.left = pawn_offsets[i] + "px"
+            squares[8 + i] = "pawn_w_" + i;
         }
+        
         const bishop_w_id = [0,1].map((i) => "bishop_w_"+i)
         for (let i = 0; i < 2; i++){
             let piece = document.getElementById(bishop_w_id[i])
             piece.style.top = "40px"
             piece.style.left = bishop_offsets[i] + "px"
+            squares[2 + i*3] = "bishop_w_" + i;
         }
+
         const king_w = document.getElementById("king_w")
         king_w.style.top = "40px"
         king_w.style.left = "160px"
+        squares[3] = "king_w"
+
         const knight_w_id = [0,1].map((i) => "knight_w_"+i)
         for (let i = 0; i < 2; i++){
             let piece = document.getElementById(knight_w_id[i])
             piece.style.top = "40px"
             piece.style.left = knight_offsets[i] + "px"
-        }
+            squares[1 + i*5] = "knight_w_" + i;
+        } 
+
         const queen_w = document.getElementById("queen_w")
         queen_w.style.top = "40px"
         queen_w.style.left = "200px"
+        squares[4] = "queen_w"
+
         const rook_w_id = [0,1].map((i) => "rook_w_"+i)
         for (let i = 0; i < 2; i++){
             let piece = document.getElementById(rook_w_id[i])
             piece.style.top = "40px"
             piece.style.left = rook_offsets[i] + "px"
+            squares[0 + i*7] = "rook_w_" + i;
         }
+
+        this.setState({squares: squares});
     }
 
     componentDidMount() {

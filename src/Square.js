@@ -3,11 +3,6 @@ import './css/board.css'
 
 class Square extends React.Component {
 
-    constructor(props){
-        super(props)
-        this.state = {piece: null}
-    }
-
     put_pawn_0(){
         const piece = document.getElementById("pawn_w_0")
         const row = Math.floor(this.props.value / 8);
@@ -64,9 +59,8 @@ class Square extends React.Component {
             id = {"square_" + this.props.value}
             onMouseOver={() => this.alpha_on()}
             onMouseOut={() => this.alpha_off()}
-            onClick = {() => this.put_pawn_0()}
+            onClick = {this.props.onClick}
             className={className} >
-            
             </button>
         );
     }
