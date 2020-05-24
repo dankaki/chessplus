@@ -14,13 +14,12 @@ class Square extends React.Component {
     }
 
     alpha_on() {
-        const alpha_top_bar = document.getElementById("alpha-top")
-        const alpha_bot_bar = document.getElementById("alpha-bot")
+        const alphas = ['A','B','C','D','E','F','G','H'].reverse()
         const row = Math.floor(this.props.value / 8);
         const col = this.props.value % 8;
-        const alpha_top = alpha_top_bar.children[col + 1]
+        const alpha_top = document.getElementById("alpha_top_"+alphas[col])
+        const alpha_bot = document.getElementById("alpha_bot_"+alphas[col])
         alpha_top.setAttribute("class","alpha-square alpha-active")
-        const alpha_bot = alpha_bot_bar.children[col + 1]
         alpha_bot.setAttribute("class","alpha-square alpha-active")
 
         const num_left = document.getElementById("num"+String(row)+"l")
@@ -30,13 +29,12 @@ class Square extends React.Component {
     }
 
     alpha_off() {
-        const alpha_top_bar = document.getElementById("alpha-top")
-        const alpha_bot_bar = document.getElementById("alpha-bot")
+        const alphas = ['A','B','C','D','E','F','G','H'].reverse()
         const row = Math.floor(this.props.value / 8);
         const col = this.props.value % 8;
-        const alpha_top = alpha_top_bar.children[col + 1]
+        const alpha_top = document.getElementById("alpha_top_"+alphas[col])
+        const alpha_bot = document.getElementById("alpha_bot_"+alphas[col])
         alpha_top.setAttribute("class","alpha-square")
-        const alpha_bot = alpha_bot_bar.children[col + 1]
         alpha_bot.setAttribute("class","alpha-square")
 
         const num_left = document.getElementById("num"+String(row)+"l")

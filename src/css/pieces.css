@@ -36,3 +36,33 @@
     background: url("../png/rook_w.png") center no-repeat;
     background-size: contain;
 }
+
+.pawn_b{
+    background: url("../png/pawn_b.png") center no-repeat;
+    background-size: contain;
+}
+
+.bishop_b{
+    background: url("../png/bishop_b.png") center no-repeat;
+    background-size: contain;
+}
+
+.king_b{
+    background: url("../png/king_b.png") center no-repeat;
+    background-size: contain;
+}
+
+.knight_b{
+    background: url("../png/knight_b.png") center no-repeat;
+    background-size: contain;
+}
+
+.queen_b{
+    background: url("../png/queen_b.png") center no-repeat;
+    background-size: contain;
+}
+
+.rook_b{
+    background: url("../png/rook_b.png") center no-repeat;
+    background-size: contain;
+}

@@ -10,18 +10,28 @@ class Board extends React.Component {
         this.state = {squares: Array(64).fill(null), chosen: null}
     }
 
+    placePiece(piece_id, i){
+        // Places the piece. Does not check anything! Does not change the state!
+        const piece = document.getElementById(piece_id)
+        const row = Math.floor(i / 8)
+        const col = i % 8
+        let y = (row + 1) * 40;
+        let x = (col + 1) * 40;
+        if (this.props.reversed) {
+            y = 360 - y
+            x = 360 - x
+        }
+        piece.style.top = String(y) + "px"
+        piece.style.left = String(x) + "px"
+    }
+
     movePiece(piece_id, i){
+        // Moves the piece. Checks if the move is legit.
         let squares = this.state.squares.slice()
         squares[squares.indexOf(piece_id)] = null
         squares[i] = piece_id
         this.setState({squares: squares})
-        const piece = document.getElementById(piece_id)
-        const row = Math.floor(i / 8)
-        const col = i % 8
-        const y = (row + 1) * 40;
-        const x = (col + 1) * 40;
-        piece.style.top = String(y) + "px"
-        piece.style.left = String(x) + "px"
+        this.placePiece(piece_id, i)
     }
 
     handleClick(i){
@@ -54,19 +64,35 @@ class Board extends React.Component {
         let row = []
 
         for (let index = 0; index < 8; index++) {
-            row.push(n*8 + index)
+            if (this.props.reversed){
+                row.push((7 - n)*8 + (7 - index))
+            }
+            else{
+                row.push(n*8 + index)
+            }
         }
         let rowItems = row.map((i) => this.renderSquare(i))
-        rowItems.unshift(<div id={"num"+String(n)+"l"} className="num-square">{n+1}</div>)
-        rowItems.push(<div id={"num"+String(n)+"r"} className="num-square">{n+1}</div>)
+        if (this.props.reversed) {
+            rowItems.unshift(<div id={"num"+String(7-n)+"l"} className="num-square">{8 - n}</div>)
+            rowItems.push(<div id={"num"+String(7-n)+"r"} className="num-square">{8 - n}</div>)
+        }
+        else{
+            rowItems.unshift(<div id={"num"+String(n)+"l"} className="num-square">{n+1}</div>)
+            rowItems.push(<div id={"num"+String(n)+"r"} className="num-square">{n+1}</div>)
+        }
+        
         return(
             <div className="board-row">{rowItems}</div>
         )
     }
 
     renderAlpha(pos){
-        const row = ['','A','B','C','D','E','F','G','H']
-        const alpha = row.map((a) => <div className = "alpha-square">{a}</div>)
+        let row = ['A','B','C','D','E','F','G','H']
+        if (!this.props.reversed) {
+            row = row.reverse()
+        }
+        row.unshift('')
+        const alpha = row.map((a) => <div id = {"alpha_"+pos+"_"+a} className = "alpha-square">{a}</div>)
         return(
             <div id = {"alpha-"+pos} className="alpha-row">{alpha}</div>
         )
@@ -80,63 +106,73 @@ class Board extends React.Component {
         const knight_w = [0,1].map((i) => <Piece id_val = {"knight_w_"+i} class_val = "piece knight_w"></Piece>)
         const queen_w = <Piece id_val = "queen_w" class_val = "piece queen_w"></Piece>
         const rook_w = [0,1].map((i) => <Piece id_val = {"rook_w_"+i} class_val = "piece rook_w"></Piece>)
-        return [...pawn_w, ...bishop_w, king_w, ...knight_w, queen_w, ...rook_w]
+        const pieces_w = [...pawn_w, ...bishop_w, king_w, ...knight_w, queen_w, ...rook_w]
+        const pawn_b = [0,1,2,3,4,5,6,7].map((i) => <Piece id_val = {"pawn_b_"+i} class_val = "piece pawn_b"></Piece>)
+        const bishop_b = [0,1].map((i) => <Piece id_val = {"bishop_b_"+i} class_val = "piece bishop_b"></Piece>)
+        const king_b = <Piece id_val = "king_b" class_val = "piece king_b"></Piece>
+        const knight_b = [0,1].map((i) => <Piece id_val = {"knight_b_"+i} class_val = "piece knight_b"></Piece>)
+        const queen_b = <Piece id_val = "queen_b" class_val = "piece queen_b"></Piece>
+        const rook_b = [0,1].map((i) => <Piece id_val = {"rook_b_"+i} class_val = "piece rook_b"></Piece>)
+        const pieces_b = [...pawn_b, ...bishop_b, king_b, ...knight_b, queen_b, ...rook_b]
+        return [...pieces_w, ...pieces_b]
     }
 
-    movePieces(){
-        const pawn_offsets = [40,80,120,160,200,240,280,320]
-        const bishop_offsets = [120, 240]
-        const knight_offsets = [80, 280]
-        const rook_offsets = [40, 320]
+    loadPieces(){
+        // Puts pieces to their classical positions in chess
 
         let squares = this.state.squares.slice();
         const pawn_w_id = [0,1,2,3,4,5,6,7].map((i) => "pawn_w_"+i)
+        const pawn_b_id = [0,1,2,3,4,5,6,7].map((i) => "pawn_b_"+i)
         for (let i = 0; i < 8; i++){
-            let piece = document.getElementById(pawn_w_id[i])
-            piece.style.top = "80px"
-            piece.style.left = pawn_offsets[i] + "px"
-            squares[8 + i] = "pawn_w_" + i;
+            this.placePiece(pawn_w_id[i], 8 + i)
+            squares[8 + i] = "pawn_w_" + i
+            this.placePiece(pawn_b_id[i], 63 - (8 + i))
+            squares[63 - (8 + i)] = "pawn_b_" + i
+            
         }
         
         const bishop_w_id = [0,1].map((i) => "bishop_w_"+i)
+        const bishop_b_id = [0,1].map((i) => "bishop_b_"+i)
         for (let i = 0; i < 2; i++){
-            let piece = document.getElementById(bishop_w_id[i])
-            piece.style.top = "40px"
-            piece.style.left = bishop_offsets[i] + "px"
-            squares[2 + i*3] = "bishop_w_" + i;
+            this.placePiece(bishop_w_id[i], 2 + i*3)
+            squares[2 + i*3] = "bishop_w_" + i
+            this.placePiece(bishop_b_id[i], 63 - (2 + i*3))
+            squares[63 - (2 + i*3)] = "bishop_b_" + i
         }
 
-        const king_w = document.getElementById("king_w")
-        king_w.style.top = "40px"
-        king_w.style.left = "160px"
+        this.placePiece("king_w", 3)
         squares[3] = "king_w"
+        this.placePiece("king_b", 63 - 4)
+        squares[63 - 4] = "king_b"
 
         const knight_w_id = [0,1].map((i) => "knight_w_"+i)
+        const knight_b_id = [0,1].map((i) => "knight_b_"+i)
         for (let i = 0; i < 2; i++){
-            let piece = document.getElementById(knight_w_id[i])
-            piece.style.top = "40px"
-            piece.style.left = knight_offsets[i] + "px"
+            this.placePiece(knight_w_id[i], 1 + 5*i)
             squares[1 + i*5] = "knight_w_" + i;
+            this.placePiece(knight_b_id[i], 63 - (1 + 5*i))
+            squares[63 - (1 + 5*i)] = "knight_b_" + i;
         } 
 
-        const queen_w = document.getElementById("queen_w")
-        queen_w.style.top = "40px"
-        queen_w.style.left = "200px"
+        this.placePiece("queen_w", 4)
         squares[4] = "queen_w"
+        this.placePiece("queen_b", 63-3)
+        squares[63-3] = "queen_b"
 
         const rook_w_id = [0,1].map((i) => "rook_w_"+i)
+        const rook_b_id = [0,1].map((i) => "rook_b_"+i)
         for (let i = 0; i < 2; i++){
-            let piece = document.getElementById(rook_w_id[i])
-            piece.style.top = "40px"
-            piece.style.left = rook_offsets[i] + "px"
-            squares[0 + i*7] = "rook_w_" + i;
+            this.placePiece(rook_w_id[i], 7*i)
+            squares[i*7] = "rook_w_" + i;
+            this.placePiece(rook_b_id[i], 63 - 7*i)
+            squares[63 -  i*7] = "rook_b_" + i;
         }
 
         this.setState({squares: squares});
     }
 
     componentDidMount() {
-        this.movePieces()
+        this.loadPieces()
     }
 
     render() {
