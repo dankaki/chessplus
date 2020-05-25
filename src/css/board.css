@@ -51,3 +51,13 @@
     color: #c83737ff;
     background-color: #ffffff99;
 }
+
+.mask{
+    z-index: 0;
+    position: absolute;
+    width: 320px;
+    height: 160px;
+    background-color: #ff000055;
+    top: 45px;
+    left: 40px;
+}
