@@ -120,7 +120,7 @@ class Board extends React.Component {
     loadPieces(){
         // Puts pieces to their classical positions in chess
 
-        let squares = this.state.squares.slice();
+        let squares = Array(64).fill(null)
         const pawn_w_id = [0,1,2,3,4,5,6,7].map((i) => "pawn_w_"+i)
         const pawn_b_id = [0,1,2,3,4,5,6,7].map((i) => "pawn_b_"+i)
         for (let i = 0; i < 8; i++){
