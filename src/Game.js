@@ -31,13 +31,13 @@ class Game extends React.Component {
         let stage = null
         switch(this.state.toRender){
             case "InitWhite":
-                stage = <InitStage id = "init-white" reversed = {true} handleDone = {(a,b) => this.handleDone(a,b)}></InitStage>
+                stage = <InitStage key="init-white" reversed = {true} handleDone = {(a,b) => this.handleDone(a,b)}></InitStage>
                 break;
             case "InitBlack":
-                stage = <InitStage id = "init-black" reversed = {false} handleDone = {(a,b) => this.handleDone(a,b)}></InitStage>
+                stage = <InitStage key="init-black" reversed = {false} handleDone = {(a,b) => this.handleDone(a,b)}></InitStage>
                 break;
             case "GameStage":
-                stage = <GameStage squares = {this.state.squares.slice()}></GameStage>
+                stage = <GameStage key="game-stage" squares = {this.state.squares.slice()}></GameStage>
                 break;
         }
 

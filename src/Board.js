@@ -57,7 +57,7 @@ class Board extends React.Component {
     }
 
     renderSquare(i){
-        return <Square value = {i} onClick = {() => this.handleClick(i)}/>;
+        return <Square key = {i} value = {i} onClick = {() => this.handleClick(i)}/>;
     }
 
     renderRow(n){
@@ -73,8 +73,8 @@ class Board extends React.Component {
         }
         let rowItems = row.map((i) => this.renderSquare(i))
         if (this.props.reversed) {
-            rowItems.unshift(<div id={"num"+String(7-n)+"l"} className="num-square">{8 - n}</div>)
-            rowItems.push(<div id={"num"+String(7-n)+"r"} className="num-square">{8 - n}</div>)
+            rowItems.unshift(<div key={"num"+String(7-n)+"l"} id={"num"+String(7-n)+"l"} className="num-square">{8 - n}</div>)
+            rowItems.push(<div key={"num"+String(7-n)+"r"} id={"num"+String(7-n)+"r"} className="num-square">{8 - n}</div>)
         }
         else{
             rowItems.unshift(<div id={"num"+String(n)+"l"} className="num-square">{n+1}</div>)
@@ -82,7 +82,7 @@ class Board extends React.Component {
         }
         
         return(
-            <div className="board-row">{rowItems}</div>
+            <div key={"row_"+n} className="board-row">{rowItems}</div>
         )
     }
 
@@ -94,7 +94,7 @@ class Board extends React.Component {
         row.unshift('')
         const alpha = row.map((a) => <div key = {"alpha_"+pos+"_"+a} id = {"alpha_"+pos+"_"+a} className = "alpha-square">{a}</div>)
         return(
-            <div id = {"alpha-"+pos} className="alpha-row">{alpha}</div>
+            <div key={"alpha-"+pos} id = {"alpha-"+pos} className="alpha-row">{alpha}</div>
         )
     }
 

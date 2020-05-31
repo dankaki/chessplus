@@ -5,7 +5,7 @@ import Board from './Board'
 class GameStage extends React.Component{
     render(){
         return(
-            <Board squares = {this.props.squares}></Board>
+            <Board reversed = {true} squares = {this.props.squares}></Board>
         )
     }
 }
