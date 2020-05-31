@@ -92,7 +92,7 @@ class Board extends React.Component {
             row = row.reverse()
         }
         row.unshift('')
-        const alpha = row.map((a) => <div id = {"alpha_"+pos+"_"+a} className = "alpha-square">{a}</div>)
+        const alpha = row.map((a) => <div key = {"alpha_"+pos+"_"+a} id = {"alpha_"+pos+"_"+a} className = "alpha-square">{a}</div>)
         return(
             <div id = {"alpha-"+pos} className="alpha-row">{alpha}</div>
         )
@@ -119,7 +119,6 @@ class Board extends React.Component {
 
     loadPieces(){
         // Puts pieces to their classical positions in chess
-
         let squares = Array(64).fill(null)
         const pawn_w_id = [0,1,2,3,4,5,6,7].map((i) => "pawn_w_"+i)
         const pawn_b_id = [0,1,2,3,4,5,6,7].map((i) => "pawn_b_"+i)
@@ -171,8 +170,22 @@ class Board extends React.Component {
         this.setState({squares: squares});
     }
 
+    setPieces(new_squares) {
+        this.setState({squares : new_squares})
+        for(let i = 0; i < 64; i++) {
+            if (new_squares[i]) {
+                this.placePiece(new_squares[i], i)
+            }
+        }
+    }
+
     componentDidMount() {
-        this.loadPieces()
+        if (this.props.squares) {
+            this.setPieces(this.props.squares)
+        }
+        else {
+            this.loadPieces()
+        }
     }
 
     render() {

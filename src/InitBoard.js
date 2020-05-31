@@ -22,6 +22,10 @@ class InitBoard extends Board {
         this.placePiece(piece_id, i)
     }
 
+    getSquares(){
+        return this.state.squares.slice()
+    }
+
     renderPieces(){
         const mask = <div class = 'mask'></div>
 

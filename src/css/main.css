@@ -1,12 +1,18 @@
 :root {
     --chess-light: #dbe2e3ff;
     --chess-dark: #122122ff;
+    --chess-gray: #6d6d6d;
     --main-font: 40px "Arial Rounded MT Bold", Futura, sans-serif;
 }
 
+.App {
+    
+}
 
 body{
     background-color: #eeeaeaff;
+    padding: 0;
+    margin: 0;
 }
 
 h1{
@@ -16,6 +22,7 @@ h1{
 }
 
 h2 {
+    text-align: center;
     color: var(--chess-dark);
     font: 30px "Arial Rounded MT Bold", Futura, sans-serif;
 }
@@ -23,8 +30,22 @@ h2 {
 .menu-button{
     width: 100px;
     height: 40px;
-    background-color: #6d6d6d;
+    background-color: var(--chess-gray);
     color: white;
     border: none;
     margin: 5px;
+}
+
+.topbar {
+    margin: 0;
+    background-color: var(--chess-gray);
+    padding: 15px 15px;
+    color: var(--chess-light);
+    font: var(--main-font);
+}
+
+.game {
+    display: flex;
+    justify-content: center;
+    align-items: center
 }

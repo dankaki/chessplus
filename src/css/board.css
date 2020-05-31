@@ -7,7 +7,7 @@
 }
 
 .blacksquare{
-    background-color: #6d6d6d;
+    background-color: var(--chess-gray);
     color: white;
 }
 
