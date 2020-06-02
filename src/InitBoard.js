@@ -22,6 +22,25 @@ class InitBoard extends Board {
         this.placePiece(piece_id, i)
     }
 
+    handleClick(i){
+        if (this.state.chosen) {
+            const prev_i = this.state.squares.indexOf(this.state.chosen)
+            const square = document.getElementById("square_"+prev_i)
+            square.className = square.className.replace(" active-square","")
+            if (!this.state.squares[i]) {
+                this.movePiece(this.state.chosen, i)
+            }
+            this.setState({chosen : null})
+        }
+        else {
+            if(this.state.squares[i]){
+                const square = document.getElementById("square_"+i)
+                square.className = square.className + " active-square"
+                this.setState({chosen : this.state.squares[i]})
+            }
+        }
+    }
+
     getSquares(){
         return this.state.squares.slice()
     }
@@ -30,22 +49,22 @@ class InitBoard extends Board {
         const mask = <div class = 'mask'></div>
 
         if (this.props.reversed) {
-            const pawn_w = [0,1,2,3,4,5,6,7].map((i) => <Piece id_val = {"pawn_w_"+i} class_val = "piece pawn_w"></Piece>)
-            const bishop_w = [0,1].map((i) => <Piece id_val = {"bishop_w_"+i} class_val = "piece bishop_w"></Piece>)
-            const king_w = <Piece id_val = "king_w" class_val = "piece king_w"></Piece>
-            const knight_w = [0,1].map((i) => <Piece id_val = {"knight_w_"+i} class_val = "piece knight_w"></Piece>)
-            const queen_w = <Piece id_val = "queen_w" class_val = "piece queen_w"></Piece>
-            const rook_w = [0,1].map((i) => <Piece id_val = {"rook_w_"+i} class_val = "piece rook_w"></Piece>)
+            const pawn_w = [0,1,2,3,4,5,6,7].map((i) => <Piece key = {"pawn_w_"+i} id_val = {"pawn_w_"+i} class_val = "piece pawn_w"></Piece>)
+            const bishop_w = [0,1].map((i) => <Piece key = {"bishop_w_"+i} id_val = {"bishop_w_"+i} class_val = "piece bishop_w"></Piece>)
+            const king_w = <Piece key = "king_w" id_val = "king_w" class_val = "piece king_w"></Piece>
+            const knight_w = [0,1].map((i) => <Piece key = {"knight_w_"+i} id_val = {"knight_w_"+i} class_val = "piece knight_w"></Piece>)
+            const queen_w = <Piece key = "queen_w" id_val = "queen_w" class_val = "piece queen_w"></Piece>
+            const rook_w = [0,1].map((i) => <Piece key = {"rook_w_"+i} id_val = {"rook_w_"+i} class_val = "piece rook_w"></Piece>)
             const pieces_w = [...pawn_w, ...bishop_w, king_w, ...knight_w, queen_w, ...rook_w]
             return [...pieces_w, mask]
         }
         else{
-            const pawn_b = [0,1,2,3,4,5,6,7].map((i) => <Piece id_val = {"pawn_b_"+i} class_val = "piece pawn_b"></Piece>)
-            const bishop_b = [0,1].map((i) => <Piece id_val = {"bishop_b_"+i} class_val = "piece bishop_b"></Piece>)
-            const king_b = <Piece id_val = "king_b" class_val = "piece king_b"></Piece>
-            const knight_b = [0,1].map((i) => <Piece id_val = {"knight_b_"+i} class_val = "piece knight_b"></Piece>)
-            const queen_b = <Piece id_val = "queen_b" class_val = "piece queen_b"></Piece>
-            const rook_b = [0,1].map((i) => <Piece id_val = {"rook_b_"+i} class_val = "piece rook_b"></Piece>)
+            const pawn_b = [0,1,2,3,4,5,6,7].map((i) => <Piece key = {"pawn_b_"+i} id_val = {"pawn_b_"+i} class_val = "piece pawn_b"></Piece>)
+            const bishop_b = [0,1].map((i) => <Piece key = {"bishop_b_"+i} id_val = {"bishop_b_"+i} class_val = "piece bishop_b"></Piece>)
+            const king_b = <Piece key = "king_b" id_val = "king_b" class_val = "piece king_b"></Piece>
+            const knight_b = [0,1].map((i) => <Piece key = {"knight_b_"+i} id_val = {"knight_b_"+i} class_val = "piece knight_b"></Piece>)
+            const queen_b = <Piece key = "queen_b" id_val = "queen_b" class_val = "piece queen_b"></Piece>
+            const rook_b = [0,1].map((i) => <Piece key = {"rook_b_"+i} id_val = {"rook_b_"+i} class_val = "piece rook_b"></Piece>)
             const pieces_b = [...pawn_b, ...bishop_b, king_b, ...knight_b, queen_b, ...rook_b]
             return [...pieces_b, mask]
         }

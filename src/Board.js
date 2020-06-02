@@ -1,13 +1,22 @@
 import React from 'react'
 import Square from './Square'
 import Piece from './Piece'
+import {squaresToFEN} from './ChessNotation'
 import './css/board.css'
+const Chess = require('chess.js')
 
+const EMPTY_BOARD = "8/8/8/8/8/8/8/8 w - - 0 1"
+const DEF_BOARD = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 class Board extends React.Component {
 
     constructor(props){
         super(props)
-        this.state = {squares: Array(64).fill(null), chosen: null}
+        this.state = {squares: Array(64).fill(null), chosen: null, fen : EMPTY_BOARD, chess: null, reversed : this.props.reversed}
+    }
+
+    reverse(){
+        const old = this.state.reversed
+        this.setState({reversed : !old})
     }
 
     placePiece(piece_id, i){
@@ -17,7 +26,7 @@ class Board extends React.Component {
         const col = i % 8
         let y = (row + 1) * 40;
         let x = (col + 1) * 40;
-        if (this.props.reversed) {
+        if (this.state.reversed) {
             y = 360 - y
             x = 360 - x
         }
@@ -32,6 +41,7 @@ class Board extends React.Component {
         squares[i] = piece_id
         this.setState({squares: squares})
         this.placePiece(piece_id, i)
+        this.reverse()
     }
 
     handleClick(i){
@@ -64,7 +74,7 @@ class Board extends React.Component {
         let row = []
 
         for (let index = 0; index < 8; index++) {
-            if (this.props.reversed){
+            if (this.state.reversed){
                 row.push((7 - n)*8 + (7 - index))
             }
             else{
@@ -72,7 +82,7 @@ class Board extends React.Component {
             }
         }
         let rowItems = row.map((i) => this.renderSquare(i))
-        if (this.props.reversed) {
+        if (this.state.reversed) {
             rowItems.unshift(<div key={"num"+String(7-n)+"l"} id={"num"+String(7-n)+"l"} className="num-square">{8 - n}</div>)
             rowItems.push(<div key={"num"+String(7-n)+"r"} id={"num"+String(7-n)+"r"} className="num-square">{8 - n}</div>)
         }
@@ -88,7 +98,7 @@ class Board extends React.Component {
 
     renderAlpha(pos){
         let row = ['A','B','C','D','E','F','G','H']
-        if (!this.props.reversed) {
+        if (!this.state.reversed) {
             row = row.reverse()
         }
         row.unshift('')
@@ -100,19 +110,19 @@ class Board extends React.Component {
 
     renderPieces(){
         //const offsets = [40,80,120,160,200,240,280,320]
-        const pawn_w = [0,1,2,3,4,5,6,7].map((i) => <Piece id_val = {"pawn_w_"+i} class_val = "piece pawn_w"></Piece>)
-        const bishop_w = [0,1].map((i) => <Piece id_val = {"bishop_w_"+i} class_val = "piece bishop_w"></Piece>)
-        const king_w = <Piece id_val = "king_w" class_val = "piece king_w"></Piece>
-        const knight_w = [0,1].map((i) => <Piece id_val = {"knight_w_"+i} class_val = "piece knight_w"></Piece>)
-        const queen_w = <Piece id_val = "queen_w" class_val = "piece queen_w"></Piece>
-        const rook_w = [0,1].map((i) => <Piece id_val = {"rook_w_"+i} class_val = "piece rook_w"></Piece>)
+        const pawn_w = [0,1,2,3,4,5,6,7].map((i) => <Piece key = {"pawn_w_"+i} id_val = {"pawn_w_"+i} class_val = "piece pawn_w"></Piece>)
+        const bishop_w = [0,1].map((i) => <Piece key = {"bishop_w_"+i} id_val = {"bishop_w_"+i} class_val = "piece bishop_w"></Piece>)
+        const king_w = <Piece key = "king_w" id_val = "king_w" class_val = "piece king_w"></Piece>
+        const knight_w = [0,1].map((i) => <Piece key = {"knight_w_"+i} id_val = {"knight_w_"+i} class_val = "piece knight_w"></Piece>)
+        const queen_w = <Piece key = "queen_w" id_val = "queen_w" class_val = "piece queen_w"></Piece>
+        const rook_w = [0,1].map((i) => <Piece key = {"rook_w_"+i} id_val = {"rook_w_"+i} class_val = "piece rook_w"></Piece>)
         const pieces_w = [...pawn_w, ...bishop_w, king_w, ...knight_w, queen_w, ...rook_w]
-        const pawn_b = [0,1,2,3,4,5,6,7].map((i) => <Piece id_val = {"pawn_b_"+i} class_val = "piece pawn_b"></Piece>)
-        const bishop_b = [0,1].map((i) => <Piece id_val = {"bishop_b_"+i} class_val = "piece bishop_b"></Piece>)
-        const king_b = <Piece id_val = "king_b" class_val = "piece king_b"></Piece>
-        const knight_b = [0,1].map((i) => <Piece id_val = {"knight_b_"+i} class_val = "piece knight_b"></Piece>)
-        const queen_b = <Piece id_val = "queen_b" class_val = "piece queen_b"></Piece>
-        const rook_b = [0,1].map((i) => <Piece id_val = {"rook_b_"+i} class_val = "piece rook_b"></Piece>)
+        const pawn_b = [0,1,2,3,4,5,6,7].map((i) => <Piece key = {"pawn_b_"+i} id_val = {"pawn_b_"+i} class_val = "piece pawn_b"></Piece>)
+        const bishop_b = [0,1].map((i) => <Piece key = {"bishop_b_"+i} id_val = {"bishop_b_"+i} class_val = "piece bishop_b"></Piece>)
+        const king_b = <Piece key = "king_b" id_val = "king_b" class_val = "piece king_b"></Piece>
+        const knight_b = [0,1].map((i) => <Piece key = {"knight_b_"+i} id_val = {"knight_b_"+i} class_val = "piece knight_b"></Piece>)
+        const queen_b = <Piece key = "queen_b" id_val = "queen_b" class_val = "piece queen_b"></Piece>
+        const rook_b = [0,1].map((i) => <Piece key = {"rook_b_"+i} id_val = {"rook_b_"+i} class_val = "piece rook_b"></Piece>)
         const pieces_b = [...pawn_b, ...bishop_b, king_b, ...knight_b, queen_b, ...rook_b]
         return [...pieces_w, ...pieces_b]
     }
@@ -167,7 +177,15 @@ class Board extends React.Component {
             squares[63 -  i*7] = "rook_b_" + i;
         }
 
-        this.setState({squares: squares});
+        this.setState({squares: squares, fen : DEF_BOARD})
+    }
+
+    updatePieces(){
+        for(let i = 0; i < 64; i++) {
+            if (this.state.squares[i]) {
+                this.placePiece(this.state.squares[i], i)
+            }
+        }
     }
 
     setPieces(new_squares) {
@@ -177,6 +195,8 @@ class Board extends React.Component {
                 this.placePiece(new_squares[i], i)
             }
         }
+        const fen = squaresToFEN(new_squares)
+        this.setState({fen : fen})
     }
 
     componentDidMount() {
@@ -186,6 +206,11 @@ class Board extends React.Component {
         else {
             this.loadPieces()
         }
+        this.setState({chess: new Chess(this.state.fen)})
+    }
+
+    componentDidUpdate(){
+        this.updatePieces()
     }
 
     render() {
