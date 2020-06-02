@@ -15,13 +15,14 @@ class GameStage extends React.Component{
 
     setPieces(){
         this.board.current.setPieces(this.board.current.state.squares)
+        alert(this.board.current.state.chess.fen())
     }
 
     render(){
         return(
             <div>
                 <h2>Play!</h2>
-                <Board ref={this.board} reversed = {true} squares = {this.props.squares}></Board>
+                <Board key="board" ref={this.board} reversed = {true} squares = {this.props.squares}></Board>
                 <button class = "menu-button" onClick = {() => this.reverse()}>Reverse!</button>
                 <button class = "menu-button" onClick = {() => this.setPieces()}>Set</button>
             </div>

@@ -4,6 +4,24 @@ import Piece from './Piece'
 import './css/board.css'
 
 class InitBoard extends Board {
+    placePiece(piece_id, i){
+        // Places the piece. Does not check anything! Does not change the state!
+        if (i === -1){
+            return
+        }
+        const piece = document.getElementById(piece_id)
+        const row = Math.floor(i / 8)
+        const col = i % 8
+        let y = (row + 1) * 40;
+        let x = (col + 1) * 40;
+        if (this.state.reversed) {
+            y = 360 - y
+            x = 360 - x
+        }
+        piece.style.top = String(y) + "px"
+        piece.style.left = String(x) + "px"
+    }
+
     movePiece(piece_id, i){
         // Moves the piece. Checks if the move is legit.
         if(this.props.reversed && i >= 32) {

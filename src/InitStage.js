@@ -22,10 +22,10 @@ class InitStage extends React.Component {
         return(
             <div class = "init-stage">
                 <h2>Arrange your pieces</h2>
-                <InitBoard ref={this.board} reversed = {this.props.reversed}></InitBoard>
+                <InitBoard key={"init_"+this.props.reversed} ref={this.board} reversed = {this.props.reversed}></InitBoard>
                 <div display = "table" >
-                    <button class = "menu-button" onClick = {() => this.handleDone()}>Done!</button>
-                    <button class = "menu-button" onClick = {() => this.toDefault()}>To default</button>
+                    <button key="done" class = "menu-button" onClick = {() => this.handleDone()}>Done!</button>
+                    <button key="default" class = "menu-button" onClick = {() => this.toDefault()}>To default</button>
                 </div>
                 
                 

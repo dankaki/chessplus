@@ -64,3 +64,11 @@ export function squaresToFEN(squares_og){
     result += " w - - 0 1"
     return result
 }
+
+export function indexToAlpha(i){
+    const letters = "hgfedcba"
+    const numbers = "12345678"
+    const row = Math.floor(i / 8)
+    const col = i % 8
+    return letters[col] + numbers[row]
+}
