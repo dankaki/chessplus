@@ -75,6 +75,31 @@ class Board extends React.Component {
         else{
             alert("You cannot do this move")
         }
+        if(this.state.chess.in_threefold_repetition()){
+            alert("Threefold repetition!")
+        }
+
+        else if(this.state.chess.game_over()){
+            if(this.state.chess.in_checkmate()){
+                alert("Checkmate!")
+            }
+            else if(this.state.chess.in_draw()){
+                alert("Draw!")
+            }
+            else if(this.state.chess.in_stalemate()){
+                alert("Stalemate!")
+            }
+            else if(this.state.chess.in_threefold_repetition()){
+                alert("Threefold repetition!")
+            }
+            else{
+                alert("Game over!")
+            }
+        }
+
+        else if(this.state.chess.in_check()){
+            alert("Check!")
+        }
     }
 
     handleClick(i){
