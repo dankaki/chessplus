@@ -60,3 +60,29 @@
     top: 45px;
     left: 40px;
 }
+
+.Modal {
+    position: absolute;
+    top: 25%;
+    left: 25%;
+    right: 25%;
+    bottom: auto;
+    padding: 5px;
+    background-color: var(--chess-light);
+  }
+
+.Overlay {
+    z-index: 10;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ffffff88;
+  }
+
+  .button-holder{
+    display: flex;
+    justify-content: center;
+    align-items: center
+  }

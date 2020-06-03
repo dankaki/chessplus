@@ -3,7 +3,10 @@ import Square from './Square'
 import Piece from './Piece'
 import {squaresToFEN, indexToAlpha} from './ChessNotation'
 import './css/board.css'
+import Modal from 'react-modal'
+
 const Chess = require('chess.js')
+Modal.setAppElement('#root');
 
 const EMPTY_BOARD = "8/8/8/8/8/8/8/8 w - - 0 1"
 const DEF_BOARD = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
@@ -32,7 +35,8 @@ class Board extends React.Component {
         if (this.props.squares) {
             fen = squaresToFEN(this.props.squares)
         }
-        this.state = {squares: Array(64).fill(null), chosen: null, fen : fen, chess: new Chess(), reversed : this.props.reversed}
+        this.state = {squares: Array(64).fill(null), chosen: null,
+            fen : fen, chess: new Chess(), reversed : this.props.reversed, modal: null}
     }
 
     reverse(){
@@ -81,16 +85,16 @@ class Board extends React.Component {
 
         else if(this.state.chess.game_over()){
             if(this.state.chess.in_checkmate()){
-                alert("Checkmate!")
+                this.setState({modal:"checkmate"})
             }
             else if(this.state.chess.in_draw()){
-                alert("Draw!")
+                this.setState({modal:"draw"})
             }
             else if(this.state.chess.in_stalemate()){
-                alert("Stalemate!")
+                this.setState({modal:"stalemate"})
             }
             else if(this.state.chess.in_threefold_repetition()){
-                alert("Threefold repetition!")
+                this.setState({modal:"threefold_repetition"})
             }
             else{
                 alert("Game over!")
@@ -98,7 +102,7 @@ class Board extends React.Component {
         }
 
         else if(this.state.chess.in_check()){
-            alert("Check!")
+            this.setState({modal:"check"})
         }
     }
 
@@ -271,6 +275,42 @@ class Board extends React.Component {
             <div className = "Board">
                 {board}
                 {pieces}
+                <Modal key="checkmate_modal" isOpen={this.state.modal === "checkmate"} className="Modal" overlayClassName="Overlay">
+                    <h2>Checkmate!</h2>
+                    <div className="button-holder">
+                        <button className = "menu-button" onClick={() => this.setState({modal:null})}>Close</button>
+                    </div>
+                </Modal>
+                <Modal key="stalemate_modal" isOpen={this.state.modal === "stalemate"} className="Modal" overlayClassName="Overlay">
+                    <h2>Stalemate!</h2>
+                    <div className="button-holder">
+                        <button className = "menu-button" onClick={() => this.setState({modal:null})}>Close</button>
+                    </div>
+                </Modal>
+                <Modal key="draw_modal" isOpen={this.state.modal === "draw"} className="Modal" overlayClassName="Overlay">
+                    <h2>Draw!</h2>
+                    <div className="button-holder">
+                        <button className = "menu-button" onClick={() => this.setState({modal:null})}>Close</button>
+                    </div>
+                </Modal>
+                <Modal key="threefold_repetition_modal" isOpen={this.state.modal === "threefold_repetition"} className="Modal" overlayClassName="Overlay">
+                    <h2>Threefold Repetition!</h2>
+                    <div className="button-holder">
+                        <button className = "menu-button" onClick={() => this.setState({modal:null})}>Close</button>
+                    </div>
+                </Modal>
+                <Modal key="check_modal" isOpen={this.state.modal === "check"} className="Modal" overlayClassName="Overlay">
+                    <h2>Check!</h2>
+                    <div className="button-holder">
+                        <button className = "menu-button" onClick={() => this.setState({modal:null})}>Close</button>
+                    </div>
+                </Modal>
+                <Modal key="promotion_modal" isOpen={this.state.modal === "promotion"} className="Modal" overlayClassName="Overlay">
+                    <h2>Choose a promotion:</h2>
+                    <div className="button-holder">
+                        <button className = "menu-button" onClick={() => this.setState({modal:null})}>Close</button>
+                    </div>
+                </Modal>
             </div>
         )
     }
