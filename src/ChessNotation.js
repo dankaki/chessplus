@@ -1,4 +1,4 @@
-function pieceToSymb(piece_id){
+export function pieceToSymb(piece_id){
     let symb = ""
     switch(piece_id.slice(0,2)){
         case "pa":

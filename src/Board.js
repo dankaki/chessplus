@@ -1,7 +1,7 @@
 import React from 'react'
 import Square from './Square'
 import Piece from './Piece'
-import {squaresToFEN, indexToAlpha} from './ChessNotation'
+import {squaresToFEN, indexToAlpha, pieceToSymb} from './ChessNotation'
 import './css/board.css'
 import Modal from 'react-modal'
 
@@ -23,9 +23,10 @@ const king_w_id = "king_w"
 const king_b_id = "king_b"
 const queen_w_id = "queen_w"
 const queen_b_id = "queen_b"
-const ALL_PIECES = [...pawn_b_id, ...pawn_w_id, ...bishop_b_id, ...bishop_w_id,
+let piece_ids = [...pawn_b_id, ...pawn_w_id, ...bishop_b_id, ...bishop_w_id,
     ...knight_b_id, ...knight_w_id, ...rook_w_id, ...rook_b_id,
     king_b_id, king_w_id, queen_b_id, queen_w_id]
+
 
 class Board extends React.Component {
 
@@ -36,7 +37,58 @@ class Board extends React.Component {
             fen = squaresToFEN(this.props.squares)
         }
         this.state = {squares: Array(64).fill(null), chosen: null,
-            fen : fen, chess: new Chess(), reversed : this.props.reversed, modal: null}
+            fen : fen, chess: new Chess(), reversed : this.props.reversed,
+            modal: null, pieces: this.renderPieces()}
+    }
+
+    promote(piece_type){
+        let pieces = this.state.pieces.slice()
+        let squares = this.state.squares.slice()
+        let new_key = ""
+        let pawn = ""
+        let new_piece = null
+        const turn = this.state.chess.turn()
+
+        for(let i = 0; i < 12; i++){
+            if(!document.getElementById(piece_type + '_' + i)){
+                new_key = piece_type + '_' + i
+                new_piece = <Piece key = {new_key} id_val = {new_key} class_val = {"piece " + piece_type}></Piece>;
+                pieces.push(new_piece)
+                piece_ids.push(new_key)
+                break;
+            }
+        }
+        
+        if (turn === 'w'){
+            for(let i = 48; i < 56; i++){
+                if(squares[i] && squares[i].indexOf("pawn_w") !== -1){
+                    const pawn_id = squares[i]
+                    pawn = pieces.find((p) => (p.key === pawn_id))
+                    pieces.splice(pieces.indexOf(pawn), 1)
+                    piece_ids.splice(piece_ids.indexOf(pawn_id), 1)
+                    squares[i] = null
+                    squares[i + 8] = new_key
+                    this.state.chess.move({from:indexToAlpha(i), to:indexToAlpha(i+8), promotion: pieceToSymb(new_key).toLowerCase()})
+                    break;
+                }
+            }
+        }
+        else if(turn === 'b'){
+            for(let i = 8; i < 16; i++){
+                if(squares[i] && squares[i].indexOf("pawn_b") !== -1){
+                    const pawn_id = squares[i]
+                    pawn = pieces.find((p) => (p.key === pawn_id))
+                    pieces.splice(pieces.indexOf(pawn), 1)
+                    piece_ids.splice(piece_ids.indexOf(pawn_id), 1)
+                    squares[i] = null
+                    squares[i - 8] = new_key
+                    this.state.chess.move({from:indexToAlpha(i), to:indexToAlpha(i-8), promotion: pieceToSymb(new_key).toLowerCase()})
+                    break;
+                }
+            }
+        }
+        this.setState({pieces: pieces, squares : squares, modal : null})
+        this.reverse()
     }
 
     reverse(){
@@ -69,6 +121,17 @@ class Board extends React.Component {
         // Moves the piece. Checks if the move is legit.
         let squares = this.state.squares.slice()
         const from = squares.indexOf(piece_id)
+        const turn = this.state.chess.turn()
+        if(piece_id.indexOf("pawn") !== -1){
+            if (turn === 'w' && to >= 56){
+                this.setState({modal: "promotion_w"})
+                return;
+            }
+            else if(turn === 'b' && to <= 7){
+                this.setState({modal: "promotion_b"})
+                return;
+            }
+        }
         const move = this.state.chess.move({from: indexToAlpha(from), to: indexToAlpha(to)})
         if(move){
             squares[from] = null
@@ -231,7 +294,7 @@ class Board extends React.Component {
     }
 
     updatePieces(){
-        let dead_pieces = ALL_PIECES.slice()
+        let dead_pieces = piece_ids.slice()
         for(let i = 0; i < 64; i++) {
             if (this.state.squares[i]) {
                 this.placePiece(this.state.squares[i], i)
@@ -274,7 +337,7 @@ class Board extends React.Component {
         return(
             <div className = "Board">
                 {board}
-                {pieces}
+                {this.state.pieces}
                 <Modal key="checkmate_modal" isOpen={this.state.modal === "checkmate"} className="Modal" overlayClassName="Overlay">
                     <h2>Checkmate!</h2>
                     <div className="button-holder">
@@ -305,10 +368,22 @@ class Board extends React.Component {
                         <button className = "menu-button" onClick={() => this.setState({modal:null})}>Close</button>
                     </div>
                 </Modal>
-                <Modal key="promotion_modal" isOpen={this.state.modal === "promotion"} className="Modal" overlayClassName="Overlay">
+                <Modal key="promotion_modal_w" isOpen={this.state.modal === "promotion_w"} className="Modal" overlayClassName="Overlay">
                     <h2>Choose a promotion:</h2>
                     <div className="button-holder">
-                        <button className = "menu-button" onClick={() => this.setState({modal:null})}>Close</button>
+                        <Piece key="promotion_bishop" class_val="piece bishop_w promoted" onClick={() => this.promote("bishop_w")}></Piece>
+                        <Piece key="promotion_knight" class_val="piece knight_w promoted" onClick={() => this.promote("knight_w")}></Piece>
+                        <Piece key="promotion_queen" class_val="piece queen_w promoted" onClick={() => this.promote("queen_w")}></Piece>
+                        <Piece key="promotion_rook" class_val="piece rook_w promoted" onClick={() => this.promote("rook_w")}></Piece>
+                    </div>
+                </Modal>
+                <Modal key="promotion_modal_b" isOpen={this.state.modal === "promotion_b"} className="Modal" overlayClassName="Overlay">
+                    <h2>Choose a promotion:</h2>
+                    <div className="button-holder">
+                        <Piece key="promotion_bishop" class_val="piece bishop_b promoted" onClick={() => this.promote("bishop_b")}></Piece>
+                        <Piece key="promotion_knight" class_val="piece knight_b promoted" onClick={() => this.promote("knight_b")}></Piece>
+                        <Piece key="promotion_queen" class_val="piece queen_b promoted" onClick={() => this.promote("queen_b")}></Piece>
+                        <Piece key="promotion_rook" class_val="piece rook_b promoted" onClick={() => this.promote("rook_b")}></Piece>
                     </div>
                 </Modal>
             </div>

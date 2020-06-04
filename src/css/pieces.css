@@ -8,6 +8,11 @@
     pointer-events: none
 }
 
+.promoted{
+    position: relative;
+    pointer-events: auto;
+}
+
 .pawn_w{
     background: url("../png/pawn_w.png") center no-repeat;
     background-size: contain;
