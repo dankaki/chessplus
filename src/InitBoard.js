@@ -6,7 +6,7 @@ import './css/board.css'
 class InitBoard extends Board {
     placePiece(piece_id, i){
         // Places the piece. Does not check anything! Does not change the state!
-        if (i === -1){
+        if (i < 0){
             return
         }
         const piece = document.getElementById(piece_id)

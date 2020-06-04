@@ -27,6 +27,9 @@ let piece_ids = [...pawn_b_id, ...pawn_w_id, ...bishop_b_id, ...bishop_w_id,
     ...knight_b_id, ...knight_w_id, ...rook_w_id, ...rook_b_id,
     king_b_id, king_w_id, queen_b_id, queen_w_id]
 
+let dead_white_i = -1;
+let dead_black_i = -1;
+
 
 class Board extends React.Component {
 
@@ -99,9 +102,16 @@ class Board extends React.Component {
     placePiece(piece_id, i){
         // Places the piece. Does not check anything! Does not change the state!
         const piece = document.getElementById(piece_id)
-        if (i === -1){
-            piece.style.top =  "40px"
-            piece.style.left = "400px"
+        const dead_row = Math.abs(i) % 8
+        const dead_col = Math.floor(Math.abs(i) / 8)
+        if (i < 0){
+            if(piece_id.indexOf("_w") !== -1){
+                piece.style.left = String(400 + dead_col*40) + "px"
+            }
+            else{
+                piece.style.left = String(480 + dead_col*40) + "px"
+            }
+            piece.style.top =  String((dead_row + dead_col)*40) + "px"
             return
         }
 
@@ -302,9 +312,14 @@ class Board extends React.Component {
                 dead_pieces.splice(index, 1)
             }
         }
-        dead_pieces.forEach(piece_id => {
-            this.placePiece(piece_id, -1)
-        });
+        const dead_w_pieces = dead_pieces.filter((piece_id) => (piece_id.indexOf("_w") !== -1))
+        const dead_b_pieces = dead_pieces.filter((piece_id) => (piece_id.indexOf("_b") !== -1))
+        for(let i = 0; i<dead_w_pieces.length; i++){
+            this.placePiece(dead_w_pieces[i], -(i+1))
+        }
+        for(let i = 0; i<dead_b_pieces.length; i++){
+            this.placePiece(dead_b_pieces[i], -(i+1))
+        }
     }
 
     setPieces(new_squares) {
